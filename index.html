@@ -5,7 +5,6 @@
     <title>Nota UMKM Yustiar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-
         body {
             font-family: Arial, sans-serif;
             background-color: #ccc;
@@ -24,14 +23,11 @@
             position: relative;
             margin: 0 auto;
         }
-
-
         
         .nota .header, .nota .no-nota {
             position: relative;
             z-index: 2;
         }
-
 
         .header {
             display: flex;
@@ -57,7 +53,6 @@
         .header-right { font-size: 11px; color: #333; text-align: right; }
         .header-right p { margin-bottom: 4px; }
 
-
         [contenteditable="true"] {
             outline: none;
             min-width: 10px;
@@ -66,7 +61,6 @@
         }
         
         .no-nota { font-size: 12px; font-weight: bold; color: #c0392b; margin-bottom: 8px; }
-
 
         .tabel-wrap {
             position: relative;
@@ -86,7 +80,6 @@
             width: 100%;
             height: auto;
         }
-
 
         .tabel-nota {
             width: 100%;
@@ -113,7 +106,6 @@
         .angka { text-align: right; }
         .tengah { text-align: center; }
 
-
         .btn-del-row {
             position: absolute;
             right: -28px;
@@ -133,10 +125,8 @@
         }
         .btn-del-row:hover { background: #a71d2a; }
 
-
         tbody tr { position: relative; }
         tbody tr:hover .btn-del-row { opacity: 1; }
-
 
         .tabel-nota .total-row td {
             border: none;
@@ -156,11 +146,12 @@
             font-weight: bold;
         }
 
-
         .controls {
             margin-top: 20px;
-            background: #333; color: white; padding: 15px;
-            border-radius: 8px; width: 100%; max-width: 750px;
+            background: transparent;
+            padding: 15px;
+            width: 100%; 
+            max-width: 750px;
             text-align: center;
             box-sizing: border-box;
             display: flex;
@@ -169,17 +160,26 @@
             justify-content: center;
             align-items: center;
         }
+        
         .controls button {
-            color: white; border: none;
-            padding: 10px 20px; cursor: pointer;
-            font-weight: bold; border-radius: 4px;
+            background-color: black;
+            color: white;
+            border: 1px solid #000;
+            padding: 10px 20px; 
+            cursor: pointer;
+            font-weight: bold; 
+            border-radius: 4px;
             font-size: 13px;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s, transform 0.1s;
         }
-        .controls button:hover { opacity: 0.85; }
-        .btn-print { background: #28a745; }
-        .btn-add { background: #007bff; }
-        .btn-remove { background: #dc3545; }
+        
+        .controls button:hover { 
+            opacity: 0.85; 
+        }
+        
+        .controls button:active {
+            transform: scale(0.98);
+        }
 
         @media print {
             body { background: white; padding: 0; }
@@ -188,7 +188,6 @@
             .btn-del-row { display: none !important; }
             @page { size: A5 landscape; margin: 5mm; }
         }
-
 
         @media screen and (max-width: 600px) {
             body { padding: 10px; }
