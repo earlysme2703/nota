@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Nota UMKM Yustiar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .nota {
+            background-color: white;
+            width: 100%;
+            max-width: 750px;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 55%;
+            left: 38%;
+            transform: translate(-50%, -50%);
+            width: 25%;
+            opacity: 0.15;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .watermark img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .nota .header, .nota .tabel-nota, .nota .no-nota {
+            position: relative;
+            z-index: 2;
+        }
+
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .header-left { display: flex; gap: 12px; }
+        .logo {
+            width: 55px; height: 55px;
+            text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .comp-name { color: #1a3a8a; font-weight: bold; font-size: 13px; }
+        .comp-big { color: #1a3a8a; font-weight: 900; font-size: 24px; margin: -2px 0 3px 0; }
+        .comp-addr { font-size: 10px; color: #333; line-height: 1.5; }
+        .header-right { font-size: 11px; color: #333; text-align: right; }
+        .header-right p { margin-bottom: 4px; }
+
+
+        [contenteditable="true"] {
+            outline: none;
+            min-width: 10px;
+            display: inline-block;
+            cursor: text;
+        }
+        
+        .no-nota { font-size: 12px; font-weight: bold; color: #c0392b; margin-bottom: 8px; }
+
+
+        .tabel-nota {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .tabel-nota th {
+            border: 1px solid #1a3a8a;
+            padding: 6px 10px;
+            text-align: center;
+            color: #1a3a8a;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .tabel-nota td {
+            border: 1px solid #1a3a8a;
+            padding: 6px 10px;
+            font-size: 12px;
+            height: 26px;
+            vertical-align: middle;
+            font-weight: bold;
+        }
+        
+        .angka { text-align: right; }
+        .tengah { text-align: center; }
+
+
+        .tabel-nota .total-row td {
+            border: none;
+        }
+        .tabel-nota .total-row .total-label {
+            text-align: right;
+            color: #c0392b;
+            font-weight: bold;
+            font-style: italic;
+            font-size: 14px;
+            padding-right: 12px;
+        }
+        .tabel-nota .total-row .total-value {
+            border: 1px solid #1a3a8a;
+            text-align: right;
+            padding-right: 10px;
+            font-weight: bold;
+        }
+
+
+        .controls {
+            margin-top: 20px;
+            background: #333; color: white; padding: 15px;
+            border-radius: 8px; width: 200px;
+            text-align: center;
+        }
+        .controls button {
+            background: #28a745; color: white; border: none;
+            padding: 10px 20px; cursor: pointer; width: 100%;
+            font-weight: bold; border-radius: 4px; margin-bottom: 5px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .nota { box-shadow: none; width: 100%; max-width: none; padding: 0; margin: 0; }
+            .controls { display: none !important; }
+
+            @page { size: A5 landscape; margin: 5mm; }
+        }
+
+
+        @media screen and (max-width: 600px) {
+            body { padding: 10px; }
+            .nota { padding: 20px; }
+            .header-left { gap: 8px; }
+            .logo { width: 45px; height: 45px; }
+            .comp-big { font-size: 20px; }
+            .tabel-nota th, .tabel-nota td { padding: 4px; font-size: 11px; }
+            .controls { width: 100%; box-sizing: border-box; }
+        }
+    </style>
+</head>
+<body>
+
+
+
+<div class="nota">
+    <div class="watermark">
+        <img src="assets/icon.png" alt="Watermark">
+    </div>
+
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">
+                <img src="assets/icon.png" alt="Logo">
+            </div>
+            <div>
+                <div class="comp-name">UMKM</div>
+                <div class="comp-big">Makmur Jaya</div>
+                <div class="comp-addr">
+                    Perum Muslim Tasnim Blok C 16<br>
+                    Sabandar - Cianjur<br>
+                    Telp. 0859-3852-4333
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <p>Cianjur, <span contenteditable="true">........................</span> 20<span contenteditable="true">26</span></p>
+            <p>Kepada Yth.</p>
+            <p><span contenteditable="true">..............................................</span></p>
+        </div>
+    </div>
+
+    <div class="no-nota">NO. NOTA : <span contenteditable="true">............</span></div>
+
+    <table class="tabel-nota">
+        <colgroup>
+            <col style="width: 14%"> <col style="width: 46%"> <col style="width: 16%"> <col style="width: 24%"> </colgroup>
+        <thead>
+            <tr>
+                <th>Banyak</th>
+                <th>Nama Barang</th>
+                <th>Satuan</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody id="items">
+            <tr>
+                <td class="tengah"><span contenteditable="true"></span></td>
+                <td class="tengah"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+            </tr>
+            <tr>
+                <td class="tengah"><span contenteditable="true"></span></td>
+                <td class="tengah"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+            </tr>
+            <tr>
+                <td class="tengah"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+            </tr>
+            <tr>
+                <td class="tengah"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+            </tr>
+            <tr>
+                <td class="tengah"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+            </tr>
+             <tr>
+                <td class="tengah"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+                <td class="angka"><span contenteditable="true"></span></td>
+            </tr>
+        </tbody>
+        
+        <tfoot>
+
+            <tr class="total-row">
+                <td colspan="3" class="total-label">Total Rp.</td>
+                <td class="total-value"><span contenteditable="true"></span></td>
+            </tr>
+            
+
+            <tr>
+                <td colspan="4" style="border: none; padding: 0; position: relative;">
+
+                    <div style="position: absolute; top: -25px; left: 0; z-index: 10; font-size: 11px; color: #333; line-height: 1.6; font-weight: bold;">
+                        Kirim ke : <span contenteditable="true">123456789 CIMB NIAGA</span><br>
+                        alias <span contenteditable="true">Dara Zahra Puspita</span>
+                    </div>
+                    
+
+                    <div style="text-align: center; width: 200px; margin: 5px auto 0;">
+                        <p style="margin:0 0 50px 0; font-weight: bold; font-size: 11px;">Hormat Kami,</p>
+                        <p style="margin:0; font-size: 11px;">( <span contenteditable="true" style="font-weight: bold; text-decoration: underline;">RITA YUSTIAR</span> )</p>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</div>
+
+<div class="controls">
+    <small style="display:block; margin-bottom:10px">Total di Kolom Banyak</small>
+    <button onclick="window.print()">🖨️ CETAK / PDF</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+*
+NOT assets/
+!assets/**
+!nota.html
+!nota_exp.html
+!.gitignore
