@@ -52,6 +52,25 @@
         .comp-addr { font-size: 10px; color: #333; line-height: 1.5; }
         .header-right { font-size: 11px; color: #333; text-align: left; }
         .header-right p { margin-bottom: 4px; }
+        .isian-field {
+            position: relative;
+            display: inline-block;
+        }
+        .isian-field .titik {
+            color: #333;
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+        .isian-field .isian {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: transparent;
+            outline: none;
+            min-width: 10px;
+        }
         .tanggal-input {
             border: none;
             background: transparent;
@@ -84,7 +103,7 @@
         }
         .tabel-wrap .watermark {
             position: absolute;
-            top: 50%;
+            top: 35%;
             left: 38%;
             transform: translate(-50%, -50%);
             width: 25%;
@@ -198,11 +217,19 @@
         }
 
         @media print {
-            body { background: white; padding: 0; }
-            .nota { box-shadow: none; width: 100%; max-width: none; padding: 0; margin: 0; }
+            @page { size: A4 portrait; margin: 5mm; }
+            body { background: white; padding: 0; margin: 0; }
+            .nota {
+                box-shadow: none;
+                width: 100%;
+                max-width: none;
+                padding: 0;
+                margin: 0;
+                transform: scale(1);
+                transform-origin: top left;
+            }
             .controls { display: none !important; }
             .btn-del-row { display: none !important; }
-            @page { size: A5 landscape; margin: 5mm; }
         }
 
         @media screen and (max-width: 600px) {
@@ -239,12 +266,12 @@
         <div class="header-right">
             <p>Cianjur, <input type="date" class="tanggal-input" id="tanggalNota"></p>
             <p>Kepada Yth.</p>
-            <p><span contenteditable="true">..............................................</span></p>
-            <p><span contenteditable="true">..............................................</span></p>
+            <p><span class="isian-field"><span class="titik">..............................................</span><span class="isian" contenteditable="true"></span></span></p>
+            <p><span class="isian-field"><span class="titik">..............................................</span><span class="isian" contenteditable="true"></span></span></p>
         </div>
     </div>
 
-    <div class="no-nota">NO. NOTA : <span contenteditable="true">............</span></div>
+    <div class="no-nota">NO. NOTA : <span class="isian-field"><span class="titik">............</span><span class="isian" contenteditable="true"></span></span></div>
 
     <div class="tabel-wrap">
         <div class="watermark">
