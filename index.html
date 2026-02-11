@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Nota UMKM MAKMUR CIANJUR</title>
+    <title>Nota UMKM Makmur Cianjur</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -140,6 +140,19 @@
         
         .angka { text-align: right; }
         .tengah { text-align: center; }
+
+        .tabel-nota input.inp-angka {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: right;
+            padding: 0;
+            outline: none;
+            box-sizing: border-box;
+        }
 
         .btn-del-row {
             position: absolute;
@@ -296,7 +309,7 @@
             <tfoot>
                 <tr class="total-row">
                     <td colspan="3" class="total-label">Total Rp.</td>
-                    <td class="total-value"><span contenteditable="true"></span></td>
+                    <td class="total-value"><span id="totalNilai">0</span></td>
                 </tr>
                 
                 <tr>
@@ -330,13 +343,47 @@
 <script>
     const tbody = document.getElementById('items');
 
+    // Hapus titik, ambil angka murni
+    function angkaMurni(str) {
+        return parseInt(String(str).replace(/\./g, '')) || 0;
+    }
+
+    // Format angka pakai titik ribuan: 3500 -> 3.500
+    function formatRupiah(angka) {
+        return angka.toLocaleString('id-ID');
+    }
+
+    // Auto-format saat ketik: hanya izinkan angka & titik
+    function formatInput(input) {
+        let val = input.value.replace(/[^0-9]/g, '');
+        if (val === '') { input.value = ''; return; }
+        input.value = formatRupiah(parseInt(val));
+    }
+
+    function hitungJumlah(tr) {
+        const banyak = angkaMurni(tr.querySelector('.inp-banyak').value);
+        const satuan = angkaMurni(tr.querySelector('.inp-satuan').value);
+        const jumlahInput = tr.querySelector('.inp-jumlah');
+        const hasil = banyak * satuan;
+        jumlahInput.value = hasil > 0 ? formatRupiah(hasil) : '';
+        hitungTotal();
+    }
+
+    function hitungTotal() {
+        let total = 0;
+        document.querySelectorAll('.inp-jumlah').forEach(inp => {
+            total += angkaMurni(inp.value);
+        });
+        document.getElementById('totalNilai').textContent = formatRupiah(total);
+    }
+
     function buatBaris() {
         const tr = document.createElement('tr');
         tr.innerHTML = `
+            <td class="angka"><input type="text" class="inp-angka inp-banyak" inputmode="numeric" oninput="formatInput(this); hitungJumlah(this.closest('tr'))"></td>
             <td class="tengah"><span contenteditable="true"></span></td>
-            <td class="tengah"><span contenteditable="true"></span></td>
-            <td class="angka"><span contenteditable="true"></span></td>
-            <td class="angka"><span contenteditable="true"></span></td>
+            <td class="angka"><input type="text" class="inp-angka inp-satuan" inputmode="numeric" oninput="formatInput(this); hitungJumlah(this.closest('tr'))"></td>
+            <td class="angka"><input type="text" class="inp-angka inp-jumlah" inputmode="numeric" oninput="formatInput(this); hitungTotal()"></td>
             <button class="btn-del-row" onclick="hapusBaris(this)" title="Hapus baris ini">✕</button>
         `;
         return tr;
@@ -350,22 +397,27 @@
         const tr = btn.closest('tr');
         if (tbody.rows.length > 1) {
             tr.remove();
+            hitungTotal();
         } else {
+            tr.querySelectorAll('input.inp-angka').forEach(i => i.value = '');
             tr.querySelectorAll('span[contenteditable]').forEach(s => s.textContent = '');
+            hitungTotal();
         }
     }
 
     function hapusBarisKosong() {
         const rows = Array.from(tbody.rows);
         rows.forEach(tr => {
+            const inputs = tr.querySelectorAll('input.inp-angka');
             const spans = tr.querySelectorAll('span[contenteditable]');
-            const semuaKosong = Array.from(spans).every(s => s.textContent.trim() === '');
+            const semuaKosong = Array.from(inputs).every(i => !i.value || i.value === '0')
+                && Array.from(spans).every(s => s.textContent.trim() === '');
             if (semuaKosong && tbody.rows.length > 1) {
                 tr.remove();
             }
         });
+        hitungTotal();
     }
-
 
     // Set tanggal hari ini otomatis
     const today = new Date();
