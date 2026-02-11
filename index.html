@@ -36,7 +36,7 @@
         }
         .header-left { display: flex; gap: 12px; }
         .logo {
-            width: 55px; height: 55px;
+            width: 77px; height: 77px;
             text-align: center; 
             flex-shrink: 0;
             display: flex;
@@ -50,8 +50,24 @@
         .comp-name { color: #1a3a8a; font-weight: bold; font-size: 13px; }
         .comp-big { color: #1a3a8a; font-weight: 900; font-size: 24px; margin: -2px 0 3px 0; }
         .comp-addr { font-size: 10px; color: #333; line-height: 1.5; }
-        .header-right { font-size: 11px; color: #333; text-align: right; }
+        .header-right { font-size: 11px; color: #333; text-align: left; }
         .header-right p { margin-bottom: 4px; }
+        .tanggal-input {
+            border: none;
+            background: transparent;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            color: #333;
+            cursor: text;
+            padding: 0;
+            outline: none;
+        }
+        .ttd-img {
+            width: 100px;
+            height: auto;
+            display: block;
+            margin: 5px auto;
+        }
 
         [contenteditable="true"] {
             outline: none;
@@ -214,15 +230,16 @@
                 <div class="comp-name">UMKM</div>
                 <div class="comp-big">Makmur Cianjur</div>
                 <div class="comp-addr">
-                    Perum Muslim Tasnim Blok C 16<br>
+                    Perumahan Muslim Tasnim Blok C 16<br>
                     Sabandar - Cianjur<br>
                     Telp. 08112141699
                 </div>
             </div>
         </div>
         <div class="header-right">
-            <p>Cianjur, <span contenteditable="true">........................</span> 20<span contenteditable="true">26</span></p>
+            <p>Cianjur, <input type="date" class="tanggal-input" id="tanggalNota"></p>
             <p>Kepada Yth.</p>
+            <p><span contenteditable="true">..............................................</span></p>
             <p><span contenteditable="true">..............................................</span></p>
         </div>
     </div>
@@ -257,14 +274,16 @@
                 
                 <tr>
                     <td colspan="4" style="border: none; padding: 0; position: relative;">
-                        <div style="position: absolute; top: -25px; left: 0; z-index: 10; font-size: 11px; color: #333; line-height: 1.6; font-weight: bold;">
-                            Kirim ke : <span contenteditable="true">762446913700</span><br>
-                            BANK : <span contenteditable="true">CIMB NIAGA</span><br>
+                        <div style="position: absolute; top: -25px; left: 0; z-index: 10; font-size: 13px; color: #333; line-height: 1.4; font-weight: bold;">
+                            Kirim ke: <br>
+                            <span contenteditable="true">762446913700</span><br>
+                            <span contenteditable="true">CIMB NIAGA</span><br>
                             a.n <span contenteditable="true">Dara Zahra Puspita</span>
                         </div>
                         
                         <div style="text-align: center; width: 200px; margin: 5px auto 0;">
-                            <p style="margin:0 0 50px 0; font-weight: bold; font-size: 11px;">Hormat Kami,</p>
+                            <p style="margin:0 0 5px 0; font-weight: bold; font-size: 11px;">Hormat Kami,</p>
+                            <img src="assets/ttd.png" alt="Tanda Tangan" class="ttd-img">
                             <p style="margin:0; font-size: 11px;">( <span contenteditable="true" style="font-weight: bold; text-decoration: underline;">RITA YUSTIAR</span> )</p>
                         </div>
                     </td>
@@ -320,6 +339,13 @@
         });
     }
 
+
+    // Set tanggal hari ini otomatis
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    document.getElementById('tanggalNota').value = `${yyyy}-${mm}-${dd}`;
 
     for (let i = 0; i < 6; i++) {
         tambahBaris();
