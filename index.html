@@ -577,13 +577,27 @@
         const delBtns = document.querySelectorAll(".btn-del-row");
         delBtns.forEach((btn) => (btn.style.display = "none"));
 
+        // Paksa ukuran desktop agar gambar selalu lebar
+        const origStyles = {
+          width: nota.style.width,
+          maxWidth: nota.style.maxWidth,
+          padding: nota.style.padding,
+        };
+        nota.style.width = "750px";
+        nota.style.maxWidth = "750px";
+        nota.style.padding = "40px";
+
         html2canvas(nota, {
           scale: 2,
           backgroundColor: "#ffffff",
           useCORS: true,
+          windowWidth: 900,
         })
           .then((canvas) => {
-            // Kembalikan tombol hapus
+            // Kembalikan style semula
+            nota.style.width = origStyles.width;
+            nota.style.maxWidth = origStyles.maxWidth;
+            nota.style.padding = origStyles.padding;
             delBtns.forEach((btn) => (btn.style.display = ""));
 
             const link = document.createElement("a");
@@ -593,6 +607,9 @@
             link.click();
           })
           .catch((err) => {
+            nota.style.width = origStyles.width;
+            nota.style.maxWidth = origStyles.maxWidth;
+            nota.style.padding = origStyles.padding;
             delBtns.forEach((btn) => (btn.style.display = ""));
             alert("Gagal menyimpan gambar: " + err.message);
           });
