@@ -1,384 +1,522 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Nota UMKM Makmur Cianjur</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Invoice UMKM Makmur Cianjur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #ccc;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+      }
+
+      .nota {
+        background-color: white;
+        width: 100%;
+        max-width: 750px;
+        padding: 40px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        margin: 0 auto;
+      }
+
+      .nota .header,
+      .nota .no-nota {
+        position: relative;
+        z-index: 2;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+      }
+      .header-left {
+        display: flex;
+        gap: 12px;
+      }
+      .logo {
+        width: 77px;
+        height: 77px;
+        text-align: center;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+      .comp-name {
+        color: #1a3a8a;
+        font-weight: bold;
+        font-size: 13px;
+      }
+      .comp-big {
+        color: #1a3a8a;
+        font-weight: 900;
+        font-size: 24px;
+        margin: -2px 0 3px 0;
+      }
+      .comp-addr {
+        font-size: 10px;
+        color: #333;
+        line-height: 1.5;
+      }
+      .header-right {
+        font-size: 11px;
+        color: #333;
+        text-align: left;
+      }
+      .header-right p {
+        margin-bottom: 4px;
+      }
+      .isian-field {
+        position: relative;
+        display: inline-block;
+      }
+      .isian-field .titik {
+        color: #333;
+        user-select: none;
+        pointer-events: none;
+        opacity: 0.3;
+      }
+      .isian-field .isian {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: transparent;
+        outline: none;
+        min-width: 10px;
+      }
+      .tanggal-input {
+        border: none;
+        background: transparent;
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        color: #333;
+        cursor: text;
+        padding: 0;
+        outline: none;
+      }
+      .ttd-img {
+        width: 100px;
+        height: auto;
+        display: block;
+        margin: 5px auto;
+      }
+
+      [contenteditable="true"] {
+        outline: none;
+        min-width: 10px;
+        display: inline-block;
+        cursor: text;
+      }
+
+      .no-nota {
+        font-size: 12px;
+        font-weight: bold;
+        color: #c0392b;
+        margin-bottom: 8px;
+      }
+
+      .tabel-wrap {
+        position: relative;
+        z-index: 2;
+      }
+      .tabel-wrap .watermark {
+        position: absolute;
+        top: 35%;
+        left: 38%;
+        transform: translate(-50%, -50%);
+        width: 25%;
+        opacity: 0.15;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .tabel-wrap .watermark img {
+        width: 100%;
+        height: auto;
+      }
+
+      .tabel-nota {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      .tabel-nota th {
+        border: 1px solid #1a3a8a;
+        padding: 6px 10px;
+        text-align: center;
+        color: #1a3a8a;
+        font-size: 13px;
+        font-weight: bold;
+      }
+      .tabel-nota td {
+        border: 1px solid #1a3a8a;
+        padding: 6px 10px;
+        font-size: 12px;
+        height: 26px;
+        vertical-align: middle;
+        font-weight: bold;
+      }
+
+      .angka {
+        text-align: right;
+      }
+      .tengah {
+        text-align: center;
+      }
+
+      .tabel-nota input.inp-angka {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: right;
+        padding: 0;
+        outline: none;
+        box-sizing: border-box;
+      }
+
+      .btn-del-row {
+        position: absolute;
+        right: -28px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s;
+        z-index: 5;
+      }
+      .btn-del-row:hover {
+        background: #a71d2a;
+      }
+
+      tbody tr {
+        position: relative;
+      }
+      tbody tr:hover .btn-del-row {
+        opacity: 1;
+      }
+
+      .tabel-nota .total-row td {
+        border: none;
+      }
+      .tabel-nota .total-row .total-label {
+        text-align: right;
+        color: #c0392b;
+        font-weight: bold;
+        font-style: italic;
+        font-size: 14px;
+        padding-right: 12px;
+      }
+      .tabel-nota .total-row .total-value {
+        border: 1px solid #1a3a8a;
+        text-align: right;
+        padding-right: 10px;
+        font-weight: bold;
+      }
+
+      .controls {
+        margin-top: 20px;
+        background: transparent;
+        padding: 15px;
+        width: 100%;
+        max-width: 750px;
+        text-align: center;
+        box-sizing: border-box;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .controls button {
+        background-color: black;
+        color: white;
+        border: 1px solid #000;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: bold;
+        border-radius: 4px;
+        font-size: 13px;
+        transition:
+          opacity 0.2s,
+          transform 0.1s;
+      }
+
+      .controls button:hover {
+        opacity: 0.85;
+      }
+
+      .controls button:active {
+        transform: scale(0.98);
+      }
+
+      @media print {
+        @page {
+          size: A4 portrait;
+          margin: 5mm;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #ccc;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px;
+          background: white;
+          padding: 0;
+          margin: 0;
         }
-
         .nota {
-            background-color: white;
-            width: 100%;
-            max-width: 750px;
-            padding: 40px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            position: relative;
-            margin: 0 auto;
+          box-shadow: none;
+          width: 100%;
+          max-width: none;
+          padding: 0;
+          margin: 0;
+          transform: scale(1);
+          transform-origin: top left;
         }
-        
-        .nota .header, .nota .no-nota {
-            position: relative;
-            z-index: 2;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-        .header-left { display: flex; gap: 12px; }
-        .logo {
-            width: 77px; height: 77px;
-            text-align: center; 
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .logo img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-        .comp-name { color: #1a3a8a; font-weight: bold; font-size: 13px; }
-        .comp-big { color: #1a3a8a; font-weight: 900; font-size: 24px; margin: -2px 0 3px 0; }
-        .comp-addr { font-size: 10px; color: #333; line-height: 1.5; }
-        .header-right { font-size: 11px; color: #333; text-align: left; }
-        .header-right p { margin-bottom: 4px; }
-        .isian-field {
-            position: relative;
-            display: inline-block;
-        }
-        .isian-field .titik {
-            color: #333;
-            user-select: none;
-            pointer-events: none;
-            opacity: 0.3;
-        }
-        .isian-field .isian {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: transparent;
-            outline: none;
-            min-width: 10px;
-        }
-        .tanggal-input {
-            border: none;
-            background: transparent;
-            font-family: Arial, sans-serif;
-            font-size: 11px;
-            color: #333;
-            cursor: text;
-            padding: 0;
-            outline: none;
-        }
-        .ttd-img {
-            width: 100px;
-            height: auto;
-            display: block;
-            margin: 5px auto;
-        }
-
-        [contenteditable="true"] {
-            outline: none;
-            min-width: 10px;
-            display: inline-block;
-            cursor: text;
-        }
-        
-        .no-nota { font-size: 12px; font-weight: bold; color: #c0392b; margin-bottom: 8px; }
-
-        .tabel-wrap {
-            position: relative;
-            z-index: 2;
-        }
-        .tabel-wrap .watermark {
-            position: absolute;
-            top: 35%;
-            left: 38%;
-            transform: translate(-50%, -50%);
-            width: 25%;
-            opacity: 0.15;
-            z-index: 0;
-            pointer-events: none;
-        }
-        .tabel-wrap .watermark img {
-            width: 100%;
-            height: auto;
-        }
-
-        .tabel-nota {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-        .tabel-nota th {
-            border: 1px solid #1a3a8a;
-            padding: 6px 10px;
-            text-align: center;
-            color: #1a3a8a;
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .tabel-nota td {
-            border: 1px solid #1a3a8a;
-            padding: 6px 10px;
-            font-size: 12px;
-            height: 26px;
-            vertical-align: middle;
-            font-weight: bold;
-        }
-        
-        .angka { text-align: right; }
-        .tengah { text-align: center; }
-
-        .tabel-nota input.inp-angka {
-            width: 100%;
-            border: none;
-            background: transparent;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            font-weight: bold;
-            text-align: right;
-            padding: 0;
-            outline: none;
-            box-sizing: border-box;
-        }
-
-        .btn-del-row {
-            position: absolute;
-            right: -28px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 22px; height: 22px;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.2s;
-            z-index: 5;
-        }
-        .btn-del-row:hover { background: #a71d2a; }
-
-        tbody tr { position: relative; }
-        tbody tr:hover .btn-del-row { opacity: 1; }
-
-        .tabel-nota .total-row td {
-            border: none;
-        }
-        .tabel-nota .total-row .total-label {
-            text-align: right;
-            color: #c0392b;
-            font-weight: bold;
-            font-style: italic;
-            font-size: 14px;
-            padding-right: 12px;
-        }
-        .tabel-nota .total-row .total-value {
-            border: 1px solid #1a3a8a;
-            text-align: right;
-            padding-right: 10px;
-            font-weight: bold;
-        }
-
         .controls {
-            margin-top: 20px;
-            background: transparent;
-            padding: 15px;
-            width: 100%; 
-            max-width: 750px;
-            text-align: center;
-            box-sizing: border-box;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
+          display: none !important;
         }
-        
-        .controls button {
-            background-color: black;
-            color: white;
-            border: 1px solid #000;
-            padding: 10px 20px; 
-            cursor: pointer;
-            font-weight: bold; 
-            border-radius: 4px;
-            font-size: 13px;
-            transition: opacity 0.2s, transform 0.1s;
+        .btn-del-row {
+          display: none !important;
         }
-        
-        .controls button:hover { 
-            opacity: 0.85; 
-        }
-        
-        .controls button:active {
-            transform: scale(0.98);
-        }
+      }
 
-        @media print {
-            @page { size: A4 portrait; margin: 5mm; }
-            body { background: white; padding: 0; margin: 0; }
-            .nota {
-                box-shadow: none;
-                width: 100%;
-                max-width: none;
-                padding: 0;
-                margin: 0;
-                transform: scale(1);
-                transform-origin: top left;
-            }
-            .controls { display: none !important; }
-            .btn-del-row { display: none !important; }
+      @media screen and (max-width: 600px) {
+        body {
+          padding: 10px;
         }
-
-        @media screen and (max-width: 600px) {
-            body { padding: 10px; }
-            .nota { padding: 20px; }
-            .header-left { gap: 8px; }
-            .logo { width: 45px; height: 45px; }
-            .comp-big { font-size: 20px; }
-            .tabel-nota th, .tabel-nota td { padding: 4px; font-size: 11px; }
-            .controls { width: 100%; }
-            .btn-del-row { opacity: 1; right: -24px; width: 18px; height: 18px; font-size: 10px; }
+        .nota {
+          padding: 20px;
         }
+        .header-left {
+          gap: 8px;
+        }
+        .logo {
+          width: 45px;
+          height: 45px;
+        }
+        .comp-big {
+          font-size: 20px;
+        }
+        .tabel-nota th,
+        .tabel-nota td {
+          padding: 4px;
+          font-size: 11px;
+        }
+        .controls {
+          width: 100%;
+        }
+        .btn-del-row {
+          opacity: 1;
+          right: -24px;
+          width: 18px;
+          height: 18px;
+          font-size: 10px;
+        }
+      }
     </style>
-</head>
-<body>
-
-<div class="nota">
-
-    <div class="header">
+  </head>
+  <body>
+    <div class="nota">
+      <div class="header">
         <div class="header-left">
-            <div class="logo">
-                <img src="assets/icon.png" alt="Logo">
+          <div class="logo">
+            <img src="assets/icon.png" alt="Logo" />
+          </div>
+          <div>
+            <div class="comp-name">UMKM</div>
+            <div class="comp-big">Makmur Cianjur</div>
+            <div class="comp-addr">
+              Perumahan Muslim Tasnim Blok C 16<br />
+              Sabandar - Cianjur<br />
+              Telp. 08112141699
             </div>
-            <div>
-                <div class="comp-name">UMKM</div>
-                <div class="comp-big">Makmur Cianjur</div>
-                <div class="comp-addr">
-                    Perumahan Muslim Tasnim Blok C 16<br>
-                    Sabandar - Cianjur<br>
-                    Telp. 08112141699
-                </div>
-            </div>
+          </div>
         </div>
         <div class="header-right">
-            <p>Cianjur, <input type="date" class="tanggal-input" id="tanggalNota"></p>
-            <p>Kepada Yth.</p>
-            <p><span class="isian-field"><span class="titik">..............................................</span><span class="isian" contenteditable="true"></span></span></p>
-            <p><span class="isian-field"><span class="titik">..............................................</span><span class="isian" contenteditable="true"></span></span></p>
+          <p>
+            Cianjur,
+            <input type="date" class="tanggal-input" id="tanggalNota" />
+          </p>
+          <p>Kepada Yth.</p>
+          <p>
+            <span class="isian-field"
+              ><span class="titik"
+                >..............................................</span
+              ><span class="isian" contenteditable="true"></span
+            ></span>
+          </p>
+          <p>
+            <span class="isian-field"
+              ><span class="titik"
+                >..............................................</span
+              ><span class="isian" contenteditable="true"></span
+            ></span>
+          </p>
         </div>
-    </div>
+      </div>
 
-    <div class="no-nota">NO. NOTA : <span class="isian-field"><span class="titik">............</span><span class="isian" contenteditable="true"></span></span></div>
+      <div class="no-nota">
+        NO. NOTA :
+        <span class="isian-field"
+          ><span class="titik">............</span
+          ><span class="isian" contenteditable="true"></span
+        ></span>
+      </div>
 
-    <div class="tabel-wrap">
+      <div class="tabel-wrap">
         <div class="watermark">
-            <img src="assets/icon.png" alt="Watermark">
+          <img src="assets/icon.png" alt="Watermark" />
         </div>
         <table class="tabel-nota">
-            <colgroup>
-                <col style="width: 14%"> <col style="width: 46%"> <col style="width: 16%"> <col style="width: 24%">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>Banyak</th>
-                    <th>Nama Barang</th>
-                    <th>Satuan</th>
-                    <th>Jumlah</th>
-                </tr>
-            </thead>
-            <tbody id="items">
+          <colgroup>
+            <col style="width: 14%" />
+            <col style="width: 46%" />
+            <col style="width: 16%" />
+            <col style="width: 24%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Banyak</th>
+              <th>Nama Barang</th>
+              <th>Satuan</th>
+              <th>Jumlah</th>
+            </tr>
+          </thead>
+          <tbody id="items"></tbody>
 
-            </tbody>
-            
-            <tfoot>
-                <tr class="total-row">
-                    <td colspan="3" class="total-label">Total Rp.</td>
-                    <td class="total-value"><span id="totalNilai">0</span></td>
-                </tr>
-                
-                <tr>
-                    <td colspan="4" style="border: none; padding: 0; position: relative;">
-                        <div style="position: absolute; top: -25px; left: 0; z-index: 10; font-size: 13px; color: #333; line-height: 1.4; font-weight: bold;">
-                            Kirim ke: <br>
-                            <span contenteditable="true">762446913700</span><br>
-                            <span contenteditable="true">CIMB NIAGA</span><br>
-                            a.n <span contenteditable="true">Dara Zahra Puspita</span>
-                        </div>
-                        
-                        <div style="text-align: center; width: 200px; margin: 5px auto 0;">
-                            <p style="margin:0 0 5px 0; font-weight: bold; font-size: 11px;">Hormat Kami,</p>
-                            <img src="assets/ttd.png" alt="Tanda Tangan" class="ttd-img">
-                            <p style="margin:0; font-size: 11px;">( <span contenteditable="true" style="font-weight: bold; text-decoration: underline;">RITA YUSTIAR</span> )</p>
-                        </div>
-                    </td>
-                </tr>
-            </tfoot>
+          <tfoot>
+            <tr class="total-row">
+              <td colspan="3" class="total-label">Total Rp.</td>
+              <td class="total-value"><span id="totalNilai">0</span></td>
+            </tr>
+
+            <tr>
+              <td
+                colspan="4"
+                style="border: none; padding: 0; position: relative"
+              >
+                <div
+                  style="
+                    position: absolute;
+                    top: -25px;
+                    left: 0;
+                    z-index: 10;
+                    font-size: 13px;
+                    color: #333;
+                    line-height: 1.4;
+                    font-weight: bold;
+                  "
+                >
+                  Kirim ke: <br />
+                  <span contenteditable="true">762446913700</span><br />
+                  <span contenteditable="true">CIMB NIAGA</span><br />
+                  a.n <span contenteditable="true">Dara Zahra Puspita</span>
+                </div>
+
+                <div
+                  style="text-align: center; width: 200px; margin: 5px auto 0"
+                >
+                  <p
+                    style="
+                      margin: 0 0 5px 0;
+                      font-weight: bold;
+                      font-size: 11px;
+                    "
+                  >
+                    Hormat Kami,
+                  </p>
+                  <img
+                    src="assets/ttd.png"
+                    alt="Tanda Tangan"
+                    class="ttd-img"
+                  />
+                  <p style="margin: 0; font-size: 11px">
+                    (
+                    <span
+                      contenteditable="true"
+                      style="font-weight: bold; text-decoration: underline"
+                      >RITA YUSTIAR</span
+                    >
+                    )
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </tfoot>
         </table>
+      </div>
     </div>
 
-</div>
+    <div class="controls">
+      <button class="btn-add" onclick="tambahBaris()">Tambah Baris</button>
+      <button class="btn-remove" onclick="hapusBarisKosong()">
+        Hapus Baris Kosong
+      </button>
+      <button class="btn-print" onclick="window.print()">CETAK / PDF</button>
+      <button class="btn-img" onclick="simpanGambar()">SIMPAN GAMBAR</button>
+    </div>
 
-<div class="controls">
-    <button class="btn-add" onclick="tambahBaris()">Tambah Baris</button>
-    <button class="btn-remove" onclick="hapusBarisKosong()">Hapus Baris Kosong</button>
-    <button class="btn-print" onclick="window.print()">CETAK / PDF</button>
-</div>
+    <script>
+      const tbody = document.getElementById("items");
 
-<script>
-    const tbody = document.getElementById('items');
+      // Hapus titik, ambil angka murni
+      function angkaMurni(str) {
+        return parseInt(String(str).replace(/\./g, "")) || 0;
+      }
 
-    // Hapus titik, ambil angka murni
-    function angkaMurni(str) {
-        return parseInt(String(str).replace(/\./g, '')) || 0;
-    }
+      // Format angka pakai titik ribuan: 3500 -> 3.500
+      function formatRupiah(angka) {
+        return angka.toLocaleString("id-ID");
+      }
 
-    // Format angka pakai titik ribuan: 3500 -> 3.500
-    function formatRupiah(angka) {
-        return angka.toLocaleString('id-ID');
-    }
-
-    // Auto-format saat ketik: hanya izinkan angka & titik
-    function formatInput(input) {
-        let val = input.value.replace(/[^0-9]/g, '');
-        if (val === '') { input.value = ''; return; }
+      // Auto-format saat ketik: hanya izinkan angka & titik
+      function formatInput(input) {
+        let val = input.value.replace(/[^0-9]/g, "");
+        if (val === "") {
+          input.value = "";
+          return;
+        }
         input.value = formatRupiah(parseInt(val));
-    }
+      }
 
-    function hitungJumlah(tr) {
-        const banyak = angkaMurni(tr.querySelector('.inp-banyak').value);
-        const satuan = angkaMurni(tr.querySelector('.inp-satuan').value);
-        const jumlahInput = tr.querySelector('.inp-jumlah');
+      function hitungJumlah(tr) {
+        const banyak = angkaMurni(tr.querySelector(".inp-banyak").value);
+        const satuan = angkaMurni(tr.querySelector(".inp-satuan").value);
+        const jumlahInput = tr.querySelector(".inp-jumlah");
         const hasil = banyak * satuan;
-        jumlahInput.value = hasil > 0 ? formatRupiah(hasil) : '';
+        jumlahInput.value = hasil > 0 ? formatRupiah(hasil) : "";
         hitungTotal();
-    }
+      }
 
-    function hitungTotal() {
+      function hitungTotal() {
         let total = 0;
-        document.querySelectorAll('.inp-jumlah').forEach(inp => {
-            total += angkaMurni(inp.value);
+        document.querySelectorAll(".inp-jumlah").forEach((inp) => {
+          total += angkaMurni(inp.value);
         });
-        document.getElementById('totalNilai').textContent = formatRupiah(total);
-    }
+        document.getElementById("totalNilai").textContent = formatRupiah(total);
+      }
 
-    function buatBaris() {
-        const tr = document.createElement('tr');
+      function buatBaris() {
+        const tr = document.createElement("tr");
         tr.innerHTML = `
             <td class="angka"><input type="text" class="inp-angka inp-banyak" inputmode="numeric" oninput="formatInput(this); hitungJumlah(this.closest('tr'))"></td>
             <td class="tengah"><span contenteditable="true"></span></td>
@@ -387,49 +525,78 @@
             <button class="btn-del-row" onclick="hapusBaris(this)" title="Hapus baris ini">✕</button>
         `;
         return tr;
-    }
+      }
 
-    function tambahBaris() {
+      function tambahBaris() {
         tbody.appendChild(buatBaris());
-    }
+      }
 
-    function hapusBaris(btn) {
-        const tr = btn.closest('tr');
+      function hapusBaris(btn) {
+        const tr = btn.closest("tr");
         if (tbody.rows.length > 1) {
-            tr.remove();
-            hitungTotal();
+          tr.remove();
+          hitungTotal();
         } else {
-            tr.querySelectorAll('input.inp-angka').forEach(i => i.value = '');
-            tr.querySelectorAll('span[contenteditable]').forEach(s => s.textContent = '');
-            hitungTotal();
+          tr.querySelectorAll("input.inp-angka").forEach((i) => (i.value = ""));
+          tr.querySelectorAll("span[contenteditable]").forEach(
+            (s) => (s.textContent = ""),
+          );
+          hitungTotal();
         }
-    }
+      }
 
-    function hapusBarisKosong() {
+      function hapusBarisKosong() {
         const rows = Array.from(tbody.rows);
-        rows.forEach(tr => {
-            const inputs = tr.querySelectorAll('input.inp-angka');
-            const spans = tr.querySelectorAll('span[contenteditable]');
-            const semuaKosong = Array.from(inputs).every(i => !i.value || i.value === '0')
-                && Array.from(spans).every(s => s.textContent.trim() === '');
-            if (semuaKosong && tbody.rows.length > 1) {
-                tr.remove();
-            }
+        rows.forEach((tr) => {
+          const inputs = tr.querySelectorAll("input.inp-angka");
+          const spans = tr.querySelectorAll("span[contenteditable]");
+          const semuaKosong =
+            Array.from(inputs).every((i) => !i.value || i.value === "0") &&
+            Array.from(spans).every((s) => s.textContent.trim() === "");
+          if (semuaKosong && tbody.rows.length > 1) {
+            tr.remove();
+          }
         });
         hitungTotal();
-    }
+      }
 
-    // Set tanggal hari ini otomatis
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
-    document.getElementById('tanggalNota').value = `${yyyy}-${mm}-${dd}`;
+      // Set tanggal hari ini otomatis
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, "0");
+      const dd = String(today.getDate()).padStart(2, "0");
+      document.getElementById("tanggalNota").value = `${yyyy}-${mm}-${dd}`;
 
-    for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 6; i++) {
         tambahBaris();
-    }
-</script>
+      }
 
-</body>
+      function simpanGambar() {
+        const nota = document.querySelector(".nota");
+        // Sembunyikan tombol hapus baris
+        const delBtns = document.querySelectorAll(".btn-del-row");
+        delBtns.forEach((btn) => (btn.style.display = "none"));
+
+        html2canvas(nota, {
+          scale: 2,
+          backgroundColor: "#ffffff",
+          useCORS: true,
+        })
+          .then((canvas) => {
+            // Kembalikan tombol hapus
+            delBtns.forEach((btn) => (btn.style.display = ""));
+
+            const link = document.createElement("a");
+            const tgl = document.getElementById("tanggalNota").value || "nota";
+            link.download = `nota-${tgl}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+          })
+          .catch((err) => {
+            delBtns.forEach((btn) => (btn.style.display = ""));
+            alert("Gagal menyimpan gambar: " + err.message);
+          });
+      }
+    </script>
+  </body>
 </html>
