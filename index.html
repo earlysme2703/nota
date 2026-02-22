@@ -102,7 +102,7 @@
         font-family: Arial, sans-serif;
         font-size: 11px;
         color: #333;
-        cursor: text;
+        cursor: pointer;
         padding: 0;
         outline: none;
       }
@@ -161,11 +161,12 @@
       }
       .tabel-nota td {
         border: 1px solid #1a3a8a;
-        padding: 6px 10px;
+        padding: 4px 10px;
         font-size: 12px;
-        height: 26px;
+        height: 32px;
         vertical-align: middle;
         font-weight: bold;
+        overflow: visible;
       }
 
       .angka {
@@ -177,15 +178,22 @@
 
       .tabel-nota input.inp-angka {
         width: 100%;
+        height: 24px;
         border: none;
-        background: transparent;
+        background: none;
         font-family: Arial, sans-serif;
         font-size: 12px;
         font-weight: bold;
         text-align: right;
         padding: 0;
+        margin: 0;
         outline: none;
         box-sizing: border-box;
+        line-height: 24px;
+        vertical-align: middle;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
       }
 
       .btn-del-row {
@@ -354,7 +362,8 @@
         <div class="header-right">
           <p>
             Cianjur,
-            <input type="text" class="tanggal-input" id="tanggalNota" placeholder="dd/mm/yyyy" />
+            <span class="tanggal-input" id="tanggalDisplay" onclick="document.getElementById('tanggalNota').showPicker()"></span>
+            <input type="date" id="tanggalNota" style="position:absolute;opacity:0;width:0;height:0;" onchange="updateTanggalDisplay()" />
           </p>
           <p>Kepada Yth.</p>
           <p>
@@ -560,12 +569,22 @@
         hitungTotal();
       }
 
+      // Format tanggal dd/mm/yyyy
+      function updateTanggalDisplay() {
+        const val = document.getElementById('tanggalNota').value;
+        if (val) {
+          const [y, m, d] = val.split('-');
+          document.getElementById('tanggalDisplay').textContent = `${d}/${m}/${y}`;
+        }
+      }
+
       // Set tanggal hari ini otomatis
       const today = new Date();
       const yyyy = today.getFullYear();
       const mm = String(today.getMonth() + 1).padStart(2, "0");
       const dd = String(today.getDate()).padStart(2, "0");
-      document.getElementById("tanggalNota").value = `${dd}/${mm}/${yyyy}`;
+      document.getElementById("tanggalNota").value = `${yyyy}-${mm}-${dd}`;
+      updateTanggalDisplay();
 
       for (let i = 0; i < 6; i++) {
         tambahBaris();
